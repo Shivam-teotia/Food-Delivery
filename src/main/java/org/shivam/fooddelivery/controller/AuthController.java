@@ -10,6 +10,7 @@ import org.shivam.fooddelivery.exception.UserException;
 import org.shivam.fooddelivery.request.LoginRequest;
 import org.shivam.fooddelivery.response.AuthResponse;
 import org.shivam.fooddelivery.service.CustomUserDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,10 +34,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
     private JwtProvider jwtProvider;
+    @Autowired
     private CustomUserDetailService customUserDetails;
+    @Autowired
     private CartRepository cartRepository;
 
     @PostMapping("/signup")
@@ -86,7 +92,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> signin(@Valid @RequestBody LoginRequest loginRequest) {
 
         String username = loginRequest.getEmail();
         String password = loginRequest.getPassword();
