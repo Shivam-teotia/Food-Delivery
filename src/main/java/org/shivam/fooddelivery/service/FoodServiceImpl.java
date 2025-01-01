@@ -2,6 +2,7 @@ package org.shivam.fooddelivery.service;
 
 import org.shivam.fooddelivery.Model.Category;
 import org.shivam.fooddelivery.Model.Food;
+import org.shivam.fooddelivery.Model.IngredientsItem;
 import org.shivam.fooddelivery.Model.Restaurant;
 import org.shivam.fooddelivery.Repository.FoodRepository;
 import org.shivam.fooddelivery.exception.FoodException;
@@ -22,21 +23,30 @@ public class FoodServiceImpl implements FoodService {
     private FoodRepository foodRepository;
 
     @Override
-    public Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant) throws FoodException, RestaurantException {
-        Food food=new Food();
+    public Food createFood(CreateFoodRequest request, Category category, Restaurant restaurant) throws FoodException, RestaurantException {
+        Food food = new Food();
+        food.setName(request.getName());
+        food.setDescription(request.getDescription());
+        food.setPrice(request.getPrice());
         food.setFoodCategory(category);
-        food.setCreationDate(new Date());
-        food.setDescription(req.getDescription());
-        food.setImages(req.getImages());
-        food.setName(req.getName());
-        food.setPrice((long) req.getPrice());
-        food.setSeasonal(req.isSeasonal());
-        food.setVegetarian(req.isVegetarian());
-        food.setIngredients(req.getIngredients());
         food.setRestaurant(restaurant);
-        food = foodRepository.save(food);
-        restaurant.getFoods().add(food);
-        return food;
+        food.setVegetarian(request.isVegetarian());
+        food.setSeasonal(request.isSeasonal());
+        food.setAvailable(true); // Default availability
+        food.setCreationDate(new Date());
+
+        // Add ingredients
+        List<IngredientsItem> ingredients = request.getIngredients().stream().map(ingredientDto -> {
+            IngredientsItem ingredient = new IngredientsItem();
+            ingredient.setName(ingredientDto.getName());
+            ingredient.setCategory(ingredientDto.getCategory());
+            return ingredient;
+        }).collect(Collectors.toList());
+
+        food.setIngredients(ingredients);
+
+        // Save food (cascades save for ingredients)
+        return foodRepository.save(food);
     }
 
     @Override

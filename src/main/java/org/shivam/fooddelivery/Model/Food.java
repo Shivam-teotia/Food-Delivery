@@ -1,5 +1,6 @@
 package org.shivam.fooddelivery.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,7 +40,7 @@ public class Food {
     private boolean isVegetarian;
     private boolean isSeasonal;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<IngredientsItem> ingredients=new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
