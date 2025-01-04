@@ -34,6 +34,8 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @Getter
+    @Setter
     private UserRole role=UserRole.ROLE_CUSTOMER;
     @JsonIgnore
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)

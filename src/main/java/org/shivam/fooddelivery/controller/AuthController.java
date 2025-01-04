@@ -47,6 +47,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> createUserHandler(@Valid @RequestBody User user) throws UserException {
+        System.out.println(user);
         String email = user.getEmail();
         String password = user.getPassword();
         String fullName = user.getFullName();
@@ -93,7 +94,6 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> signin(@Valid @RequestBody LoginRequest loginRequest) {
-
         String username = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
